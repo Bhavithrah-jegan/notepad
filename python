@@ -1,0 +1,86 @@
+from tkinter.filedialog import *
+from tkinter import *
+from tkinter import font
+import tkinter as tk
+
+def saveFile():
+    new_file= asksaveasfile(mode='w',filetype=[('text files','.txt')])
+    if new_file is None:
+        return
+    text=str(npcanvas.get(1.0,END))
+    new_file.write(text)
+    new_file.close()
+
+def openFile():
+    file = askopenfile(mode='r',filetype=[('text files','.txt')])
+    if file is not None:
+        content= file.read()
+    npcanvas.insert(INSERT,content)
+
+def clearFile():
+    npcanvas.delete(1.0,END)
+
+def italicsitem():
+    ft= font.Font(npcanvas, npcanvas.cget("font"))
+    ft.configure(slant="italic")
+
+    npcanvas.tag_config("italic", font=ft)
+    currenttags =  npcanvas.tag_names("sel.first")
+
+    if"italic" in currenttags:
+        npcanvas.tag_remove("italic","sel.first","sel.last")
+    else:
+        npcanvas.tag_add("italic", "sel.first", "sel.last")
+
+def bolditem():
+    ft = font.Font(npcanvas, npcanvas.cget("font"))
+    ft.configure(weight="bold")
+
+    npcanvas.tag_config("bold", font=ft)
+    currenttags = npcanvas.tag_names("sel.first")
+
+    if "bold" in currenttags:
+        npcanvas.tag_remove("bold", "sel.first", "sel.last")
+    else:
+        npcanvas.tag_add("bold", "sel.first", "sel.last")
+
+def ulitem():
+    ft = font.Font(npcanvas, npcanvas.cget("font"))
+    ft.configure(underline="true")
+
+    npcanvas.tag_config("ul", font=ft)
+    currenttags = npcanvas.tag_names("sel.first")
+
+    if "ul" in currenttags:
+        npcanvas.tag_remove("ul", "sel.first", "sel.last")
+    else:
+        npcanvas.tag_add("ul", "sel.first", "sel.last")
+
+np=tk.Tk()
+np.geometry("400x500")
+np.title("NOTEPAD")
+np.config(bg="orange")
+top= Frame(np,bg="#F1E6D9")
+top.pack(padx=10, pady=5, anchor='nw')
+npcanvas=tk.Text(np,bg="#F1E6D9",fg="#1A3263",font=("Bahnschrift",14), relief=SUNKEN)
+npcanvas.pack(padx=10, pady=10, expand=TRUE, fill=BOTH)
+b1= Button(np, text="SAVE", bg="black", fg="Cyan",font=("Bahnschrift",14), command=saveFile, relief=RAISED)
+b1.pack(in_=top,padx=10, pady=10, side=LEFT)
+b2= Button(np, text="OPEN", bg="black", fg="cyan",font=("Bahnschrift",14), command=openFile, relief=RAISED)
+b2.pack(in_=top,padx=10, pady=10,side=LEFT)
+b3= Button(np, text="CLEAR ALL", bg="black",fg="cyan",font=("Bahnschrift",14), command=clearFile, relief=RAISED)
+b3.pack(in_=top,padx=10, pady=10,side=LEFT)
+
+italics=PhotoImage(file="italics.png")
+b4= Button(np,image=italics,borderwidth=3, command= italicsitem)
+b4.pack(in_=top,padx=10, pady=10,side=LEFT)
+
+boldB=PhotoImage(file="bold.png")
+b5= Button(np,image=boldB,borderwidth=3, command= bolditem)
+b5.pack(in_=top,padx=10, pady=10,side=LEFT)
+
+ul=PhotoImage(file="underline.png")
+b6= Button(np,image=ul,borderwidth=3, command= ulitem)
+b6.pack(in_=top,padx=10, pady=10,side=LEFT)
+
+np.mainloop()
